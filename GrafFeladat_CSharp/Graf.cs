@@ -63,7 +63,77 @@ namespace GrafFeladat_CSharp
             elek.Add(new El(cs1, cs2));
             elek.Add(new El(cs2, cs1));
         }
+        public void SzelessegiBejar(int kezdopont)
+        {
+            HashSet<int> bejart = new HashSet<int>();
+            Queue<int> kovetkezok = new Queue<int>();
+            kovetkezok.Enqueue(kezdopont);
+            bejart.Add(kezdopont);
+            while (kovetkezok.Count != 0)
+            {
+                int k = kovetkezok.Dequeue();
+                Console.WriteLine(k);
+                foreach (var el in this.elek)
+                {
+                    if ((el.Csucs1 == k) && (bejart.Contains(el.Csucs2)))
+                    {
+                        kovetkezok.Enqueue(el.Csucs2);
+                        bejart.Add(el.Csucs2);
+                    }
+                }
+            }
 
+        }
+
+        public void MelysegiBejar(int kezdopont)
+        {
+            HashSet<int> bejart = new HashSet<int>();
+            Stack<int> kovetkezok = new Stack<int>();
+            kovetkezok.Push(kezdopont);
+            bejart.Add(kezdopont);
+            while (kovetkezok.Count != 0)
+            {
+                int k = kovetkezok.Pop();
+                Console.WriteLine(k);
+                foreach (var el in this.elek)
+                {
+                    if ((el.Csucs1 == k) && (bejart.Contains(el.Csucs2)))
+                    {
+                        kovetkezok.Push(el.Csucs2);
+                        bejart.Add(el.Csucs2);
+                    }
+                }
+            }
+
+        }
+
+        public int MohoSzinezes()
+        {
+
+            Dictionary<int, int> szinezes = new Dictionary<int, int>();
+            int maxSzin = this.csucsokSzama;
+            HashSet<int> valaszthatoSzinek = new HashSet<int>();
+            for (int i = 0; i < maxSzin - 1; i++)
+            {
+                valaszthatoSzinek.Add(i);
+            }
+            for (int i = 0; i < this.csucsokSzama - 1; i++)
+            {
+                foreach (var el in elek)
+                {
+                    if (el.Csucs1 == i)
+                    {
+                        if (szinezes.ContainsKey(el.Csucs2))
+                        {
+                            var szin = szinezes[el.Csucs2];
+                            valaszthatoSzinek.Remove(szin);
+                        }
+                    }
+                }
+                var valasztottszin = valaszthatoSzinek.Min();
+                szinezes.Add(i, valasztottszin);
+            }
+        }
         public override string ToString()
         {
             string str = "Csucsok:\n";
